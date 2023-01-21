@@ -39,7 +39,7 @@ func init() {
 	}
 	if make_keys {
 		// Generate keys
-		private_key, public_key = DGenerateKeyPair()
+		public_key, private_key = DGenerateKeyPair()
 		// Make directory if it doesn't exist
 		err := os.MkdirAll(home_dir+"/.config/runawayvpn/keys/signing", 0755)
 		if err != nil {
