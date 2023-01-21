@@ -7,6 +7,11 @@ import (
 )
 
 func main() {
+	go jwt_test()
+	select {}
+}
+
+func jwt_test() {
 	jwt_testing_server := gin.Default()
 	jwt_testing_server.GET("/testing/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
