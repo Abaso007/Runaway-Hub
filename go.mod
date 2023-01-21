@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766
 	github.com/gin-gonic/gin v1.8.2
-	github.com/golang-jwt/jwt/v4 v4.4.3
 )
 
 require (
