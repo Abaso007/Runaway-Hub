@@ -25,5 +25,30 @@ func main() {
 			"jwt": jwt,
 		})
 	})
+	jwt_testing_server.POST("/testing/verify_jwt", func(c *gin.Context) {
+		// JSON body
+		type JSONBody struct {
+			JWT string `json:"jwt"`
+		}
+		var jsonBody JSONBody
+		err := c.BindJSON(&jsonBody)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		// Verify JWT
+		payload, err := sec.VerifyToken(jsonBody.JWT)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"payload": payload,
+		})
+	})
 	jwt_testing_server.Run() // listen and serve on
 }

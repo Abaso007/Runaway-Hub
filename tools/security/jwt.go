@@ -106,7 +106,7 @@ func VerifyToken(token string) (interface{}, error) {
 
 	// Verify signature
 	if !DVerify(public_key, append(headerBytes, payloadBytes...), signature) {
-		return nil, err
+		return nil, errors.New("invalid signature")
 	}
 
 	// Decode payload
