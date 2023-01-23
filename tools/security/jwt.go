@@ -85,38 +85,40 @@ func CreateToken(payload string) (string, error) {
 }
 
 // VerifyToken verifies a JWT token and returns the payload
-func VerifyToken(token string) (interface{}, error) {
+func VerifyToken(token string, custom_public_key string) (string, error) {
 	// Decode header, payload, and signature
 	headerB64, payloadB64, signatureB64, err := SplitToken(token)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	headerBytes, err := DecodeSB(headerB64)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	payloadBytes, err := DecodeSB(payloadB64)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	signature, err := DecodeSB(signatureB64)
 	if err != nil {
-		return nil, err
+		return "", err
+	}
+	var public_key []byte
+	if custom_public_key == "" {
+		public_key = Public_key
+	} else {
+		public_key, err = DecodeSB(custom_public_key)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	// Verify signature
-	if !DVerify(Public_key, append(headerBytes, payloadBytes...), signature) {
-		return nil, errors.New("invalid signature")
+	if !DVerify(public_key, append(headerBytes, payloadBytes...), signature) {
+		return "", errors.New("invalid signature")
 	}
 
-	// Decode payload
-	var payload interface{}
-	err = json.Unmarshal(payloadBytes, &payload)
-	if err != nil {
-		return nil, err
-	}
-
-	return payload, nil
+	return string(payloadBytes), nil
 }
 
 // SplitToken decodes a JWT token into its header, payload, and signature

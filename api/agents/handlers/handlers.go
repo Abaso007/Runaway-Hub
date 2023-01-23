@@ -15,11 +15,15 @@ import (
 const SECRET_KEY = "secret"
 
 func RegisterAgent(c *gin.Context) {
-	type RegisterAgentRequest struct {
+	type RequestPayload struct {
 		PublicIP  string `json:"public_ip"`
 		SecretKey string `json:"secret_key"`
 		PublicKey string `json:"public_key"`
 		Name      string `json:"name"`
+	}
+	type UnverifiedRequest struct {
+		PublicKey string `json:"public_key"`
+		JwtToken  string `json:"jwt"`
 	}
 	type RegisterAgentResponse struct {
 		Success   bool   `json:"success"`
@@ -27,16 +31,27 @@ func RegisterAgent(c *gin.Context) {
 		PublicKey string `json:"public_key"`
 		JwtToken  string `json:"jwt"`
 	}
-	var request RegisterAgentRequest
+	var raw_request UnverifiedRequest
 	var response RegisterAgentResponse
-	err := c.BindJSON(&request)
+	err := c.BindJSON(&raw_request)
 	if err != nil {
 		response.Success = false
 		response.Error = err.Error()
 		c.JSON(400, response)
 		return
 	}
-	if request.SecretKey != SECRET_KEY {
+	// Verify JWT
+	request_jwt_payload, err := sec.VerifyToken(raw_request.JwtToken, raw_request.PublicKey)
+	if err != nil {
+		response.Success = false
+		response.Error = err.Error()
+		c.JSON(401, response)
+		return
+	}
+	// Unmarshal payload
+	var request_payload RequestPayload
+	err = json.Unmarshal([]byte(request_jwt_payload), &request_payload)
+	if request_payload.SecretKey != SECRET_KEY {
 		response.Success = false
 		response.Error = "Invalid secret key"
 		c.JSON(401, response)
@@ -44,9 +59,9 @@ func RegisterAgent(c *gin.Context) {
 	}
 	// Register agent
 	agent := types.Agent{
-		PublicIP:  request.PublicIP,
-		PublicKey: request.PublicKey,
-		Name:      request.Name,
+		PublicIP:  request_payload.PublicIP,
+		PublicKey: request_payload.PublicKey,
+		Name:      request_payload.Name,
 		Identity:  "agent",
 	}
 	err = auth.RegisterAgent(agent)
@@ -60,21 +75,21 @@ func RegisterAgent(c *gin.Context) {
 	response.Success = true
 	response.PublicKey = sec.EncodeBS(sec.Public_key)
 	// Construct JWT payload with agent
-	payload, err := json.Marshal(agent)
+	response_jwt_payload, err := json.Marshal(agent)
 	if err != nil {
 		response.Success = false
 		response.Error = err.Error()
 		c.JSON(500, response)
 		return
 	}
-	// Create JWT token
-	token, err := sec.CreateToken(string(payload))
+	// Create JWT response_token
+	response_token, err := sec.CreateToken(string(response_jwt_payload))
 	if err != nil {
 		response.Success = false
 		response.Error = err.Error()
 		c.JSON(500, response)
 		return
 	}
-	response.JwtToken = token
+	response.JwtToken = response_token
 	c.JSON(200, response)
 }

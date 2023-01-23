@@ -52,7 +52,7 @@ func jwt_test() {
 			return
 		}
 		// Verify JWT
-		payload, err := sec.VerifyToken(jsonBody.JWT)
+		payload, err := sec.VerifyToken(jsonBody.JWT, "")
 		if err != nil {
 			c.JSON(400, gin.H{
 				"error": err.Error(),

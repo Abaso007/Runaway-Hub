@@ -11,7 +11,7 @@ func JWTAuth() gin.HandlerFunc {
 		// Get JWT from header
 		token := c.Request.Header.Get("Authorization")
 		// Verify JWT
-		payload, err := sec.VerifyToken(token)
+		payload, err := sec.VerifyToken(token, "")
 		if err != nil {
 			c.JSON(400, gin.H{
 				"error": err.Error(),
