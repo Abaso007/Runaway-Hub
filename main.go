@@ -2,13 +2,21 @@
 package main
 
 import (
+	agent_handlers "github.com/RunawayVPN/Runaway-Hub/api/agents/handlers"
 	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	go jwt_test()
+	go agent_test()
 	select {}
+}
+
+func agent_test() {
+	agent_testing_server := gin.Default()
+	agent_testing_server.POST("/agent/registration", agent_handlers.RegisterAgent)
+	agent_testing_server.Run(":8080")
 }
 
 func jwt_test() {
@@ -55,5 +63,5 @@ func jwt_test() {
 			"payload": payload,
 		})
 	})
-	jwt_testing_server.Run() // listen and serve on
+	jwt_testing_server.Run(":8081")
 }

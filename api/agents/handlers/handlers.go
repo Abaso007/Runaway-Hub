@@ -1,11 +1,10 @@
-package server
+package handlers
 
 // The agents need to be authorized. This should be done with a JWT token handed out by the server
 // when the agent is registered. The token should be stored in the agent's config file and sent
 
 import (
 	"encoding/json"
-	_ "encoding/json"
 
 	"github.com/RunawayVPN/Runaway-Hub/tools/auth"
 	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
