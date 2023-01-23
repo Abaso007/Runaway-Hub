@@ -25,7 +25,7 @@ func RegisterAgent(c *gin.Context) {
 		Success   bool   `json:"success"`
 		Error     string `json:"error"`
 		PublicKey string `json:"public_key"`
-		JwtToken  string `json:"string"`
+		JwtToken  string `json:"jwt"`
 	}
 	var request RegisterAgentRequest
 	var response RegisterAgentResponse
