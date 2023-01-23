@@ -47,6 +47,7 @@ func RegisterAgent(c *gin.Context) {
 		PublicIP:  request.PublicIP,
 		PublicKey: request.PublicKey,
 		Name:      request.Name,
+		Identity:  "agent",
 	}
 	err = auth.RegisterAgent(agent)
 	if err != nil {
