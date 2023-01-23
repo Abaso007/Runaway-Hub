@@ -1,4 +1,4 @@
-package server
+package clients
 
 import (
 	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
