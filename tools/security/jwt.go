@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-var private_key []byte
-var public_key []byte
+var Private_key []byte
+var Public_key []byte
 
 // init: Creates a private key and a public key for JWT signing if they don't exist on disk
 func init() {
@@ -21,7 +21,7 @@ func init() {
 	// If exists, load keys
 	if _, err := os.Stat(home_dir + "/.config/runawayvpn/keys/signing/private.key"); err == nil {
 		// Read private key
-		private_key, err = os.ReadFile(home_dir + "/.config/runawayvpn/keys/signing/private.key")
+		Private_key, err = os.ReadFile(home_dir + "/.config/runawayvpn/keys/signing/private.key")
 		if err != nil {
 			make_keys = true
 		}
@@ -30,7 +30,7 @@ func init() {
 	}
 	if _, err := os.Stat(home_dir + "/.config/runawayvpn/keys/signing/public.key"); err == nil {
 		// Read public key
-		public_key, err = os.ReadFile(home_dir + "/.config/runawayvpn/keys/signing/public.key")
+		Public_key, err = os.ReadFile(home_dir + "/.config/runawayvpn/keys/signing/public.key")
 		if err != nil {
 			make_keys = true
 		}
@@ -39,18 +39,18 @@ func init() {
 	}
 	if make_keys {
 		// Generate keys
-		public_key, private_key = DGenerateKeyPair()
+		Public_key, Private_key = DGenerateKeyPair()
 		// Make directory if it doesn't exist
 		err := os.MkdirAll(home_dir+"/.config/runawayvpn/keys/signing", 0755)
 		if err != nil {
 			panic(err)
 		}
 		// Write keys to disk
-		err = os.WriteFile(home_dir+"/.config/runawayvpn/keys/signing/private.key", private_key, 0644)
+		err = os.WriteFile(home_dir+"/.config/runawayvpn/keys/signing/private.key", Private_key, 0644)
 		if err != nil {
 			panic(err)
 		}
-		err = os.WriteFile(home_dir+"/.config/runawayvpn/keys/signing/public.key", public_key, 0644)
+		err = os.WriteFile(home_dir+"/.config/runawayvpn/keys/signing/public.key", Public_key, 0644)
 		if err != nil {
 			panic(err)
 		}
@@ -75,7 +75,7 @@ func CreateToken(payload string) (string, error) {
 	payloadB64 := EncodeSS(payload)
 
 	// Sign token
-	signature := DSign(private_key, append(headerJSON, []byte(payload)...))
+	signature := DSign(Private_key, append(headerJSON, []byte(payload)...))
 
 	// Encode signature
 	signatureB64 := EncodeBS(signature)
@@ -105,7 +105,7 @@ func VerifyToken(token string) (interface{}, error) {
 	}
 
 	// Verify signature
-	if !DVerify(public_key, append(headerBytes, payloadBytes...), signature) {
+	if !DVerify(Public_key, append(headerBytes, payloadBytes...), signature) {
 		return nil, errors.New("invalid signature")
 	}
 
