@@ -14,23 +14,24 @@ import (
 
 const SECRET_KEY = "secret"
 
+type RegistrationPayload struct {
+	PublicIP  string `json:"public_ip"`
+	SecretKey string `json:"secret_key"`
+	PublicKey string `json:"public_key"`
+	Name      string `json:"name"`
+}
+type UnverifiedRequest struct {
+	PublicKey string `json:"public_key"`
+	JwtToken  string `json:"jwt"`
+}
+type RegisterAgentResponse struct {
+	Success   bool   `json:"success"`
+	Error     string `json:"error"`
+	PublicKey string `json:"public_key"`
+	JwtToken  string `json:"jwt"`
+}
+
 func RegisterAgent(c *gin.Context) {
-	type RequestPayload struct {
-		PublicIP  string `json:"public_ip"`
-		SecretKey string `json:"secret_key"`
-		PublicKey string `json:"public_key"`
-		Name      string `json:"name"`
-	}
-	type UnverifiedRequest struct {
-		PublicKey string `json:"public_key"`
-		JwtToken  string `json:"jwt"`
-	}
-	type RegisterAgentResponse struct {
-		Success   bool   `json:"success"`
-		Error     string `json:"error"`
-		PublicKey string `json:"public_key"`
-		JwtToken  string `json:"jwt"`
-	}
 	var raw_request UnverifiedRequest
 	var response RegisterAgentResponse
 	err := c.BindJSON(&raw_request)
@@ -49,8 +50,14 @@ func RegisterAgent(c *gin.Context) {
 		return
 	}
 	// Unmarshal payload
-	var request_payload RequestPayload
+	var request_payload RegistrationPayload
 	err = json.Unmarshal([]byte(request_jwt_payload), &request_payload)
+	if err != nil {
+		response.Success = false
+		response.Error = err.Error()
+		c.JSON(500, response)
+		return
+	}
 	if request_payload.SecretKey != SECRET_KEY {
 		response.Success = false
 		response.Error = "Invalid secret key"
