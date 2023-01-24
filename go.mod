@@ -3,6 +3,7 @@ module github.com/RunawayVPN/Runaway-Hub
 go 1.19
 
 require (
+	github.com/RunawayVPN/types v0.0.0-20230124161646-c0dad02a7af2
 	github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766
 	github.com/gin-gonic/gin v1.8.2
 	github.com/mattn/go-sqlite3 v1.14.16

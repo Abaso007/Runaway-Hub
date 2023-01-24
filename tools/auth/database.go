@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"os"
 
-	"github.com/RunawayVPN/Runaway-Hub/types"
+	"github.com/RunawayVPN/types"
 	_ "github.com/mattn/go-sqlite3"
 )
 

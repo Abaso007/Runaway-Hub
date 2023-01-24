@@ -9,7 +9,7 @@ import (
 
 	"github.com/RunawayVPN/Runaway-Hub/tools/auth"
 	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
-	"github.com/RunawayVPN/Runaway-Hub/types"
+	"github.com/RunawayVPN/types"
 	"github.com/gin-gonic/gin"
 )
 
