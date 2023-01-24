@@ -29,14 +29,7 @@ type RegisterAgentResponse struct {
 
 func RegisterAgent(c *gin.Context) {
 	var raw_request UnverifiedRequest
-	err := c.BindJSON(&raw_request)
-	if err != nil {
-		c.JSON(400, RegisterAgentResponse{
-			Success: false,
-			Error:   err.Error(),
-		})
-		return
-	}
+	check_error(c, c.BindJSON(&raw_request), 400)
 	// Check secret key
 	if raw_request.SecretKey != SECRET_KEY {
 		if check_error(c, errors.New("invalid secret key"), 500) {
@@ -50,12 +43,10 @@ func RegisterAgent(c *gin.Context) {
 	}
 	// Unmarshal payload
 	var agent types.Agent
-	err = json.Unmarshal([]byte(request_payload), &agent)
-	if check_error(c, err, 500) {
+	if check_error(c, json.Unmarshal([]byte(request_payload), &agent), 500) {
 		return
 	}
-	err = auth.RegisterAgent(agent)
-	if check_error(c, err, 500) {
+	if check_error(c, auth.RegisterAgent(agent), 500) {
 		return
 	}
 	// Construct JWT payload with agent
