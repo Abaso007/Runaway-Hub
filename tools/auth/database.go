@@ -21,7 +21,7 @@ func init() {
 		}
 		defer sqliteDB.Close()
 		// Create table
-		SqlStmt := `CREATE TABLE agents (public_ip TEXT PRIMARY KEY UNIQUE NOT NULL, public_key TEXT NOT NULL, identity TEXT NOT NULL, name TEXT NOT NULL);`
+		SqlStmt := `CREATE TABLE agents (public_ip TEXT PRIMARY KEY UNIQUE NOT NULL, public_key TEXT NOT NULL, identity TEXT NOT NULL, name TEXT NOT NULL, country TEXT, isp TEXT);`
 		_, err = sqliteDB.Exec(SqlStmt)
 		if err != nil {
 			panic(err)
@@ -37,8 +37,26 @@ func RegisterAgent(agent types.Agent) error {
 		return err
 	}
 	defer sqliteDB.Close()
+	// Check if agent already exists
+	rows, err := sqliteDB.Query("SELECT * FROM agents WHERE public_ip = ?", agent.PublicIP)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		// Update agent with new information
+		stmt, err := sqliteDB.Prepare("UPDATE agents SET public_key = ?, identity = ?, name = ? WHERE public_ip = ?, country = ?, isp = ?")
+		if err != nil {
+			return err
+		}
+		_, err = stmt.Exec(agent.PublicKey, agent.Identity, agent.Name, agent.PublicIP, agent.Country, agent.ISP)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 	// Insert agent into database
-	stmt, err := sqliteDB.Prepare("INSERT INTO agents(public_ip, public_key, identity, name) VALUES(?, ?, ?, ?)")
+	stmt, err := sqliteDB.Prepare("INSERT INTO agents(public_ip, public_key, identity, name, country, isp) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
