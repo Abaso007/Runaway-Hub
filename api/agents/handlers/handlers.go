@@ -8,7 +8,7 @@ import (
 	"errors"
 
 	"github.com/RunawayVPN/Runaway-Hub/tools/auth"
-	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
+	sec "github.com/RunawayVPN/security"
 	"github.com/RunawayVPN/types"
 	"github.com/gin-gonic/gin"
 )

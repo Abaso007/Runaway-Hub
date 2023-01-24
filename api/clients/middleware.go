@@ -1,7 +1,7 @@
 package clients
 
 import (
-	sec "github.com/RunawayVPN/Runaway-Hub/tools/security"
+	sec "github.com/RunawayVPN/security"
 	"github.com/gin-gonic/gin"
 )
 

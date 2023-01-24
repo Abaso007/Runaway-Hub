@@ -3,13 +3,14 @@ module github.com/RunawayVPN/Runaway-Hub
 go 1.19
 
 require (
+	github.com/RunawayVPN/security v0.0.0-20230124162644-74763fa090d4
 	github.com/RunawayVPN/types v0.0.0-20230124161646-c0dad02a7af2
-	github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766
 	github.com/gin-gonic/gin v1.8.2
 	github.com/mattn/go-sqlite3 v1.14.16
 )
 
 require (
+	github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
