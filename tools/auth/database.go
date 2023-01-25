@@ -52,8 +52,9 @@ func RegisterAgent(agent types.Agent) error {
 		_, err = stmt.Exec(agent.PublicKey, agent.Identity, agent.Name, agent.PublicIP, agent.Country, agent.ISP)
 		if err != nil {
 			return err
+		} else {
+			return nil
 		}
-		return nil
 	}
 	// Insert agent into database
 	stmt, err := sqliteDB.Prepare("INSERT INTO agents(public_ip, public_key, identity, name, country, isp) VALUES(?, ?, ?, ?, ?, ?)")
