@@ -60,7 +60,7 @@ func RegisterAgent(agent types.Agent) error {
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(agent.PublicIP, agent.PublicKey, agent.Identity, agent.Name)
+	_, err = stmt.Exec(agent.PublicIP, agent.PublicKey, agent.Identity, agent.Name, agent.Country, agent.ISP)
 	if err != nil {
 		return err
 	}
