@@ -15,20 +15,8 @@ import (
 
 const SECRET_KEY = "secret"
 
-type UnverifiedRequest struct {
-	PublicKey string `json:"public_key"`
-	SecretKey string `json:"secret_key"`
-	JwtToken  string `json:"jwt"`
-}
-type RegisterAgentResponse struct {
-	Success   bool   `json:"success"`
-	Error     string `json:"error"`
-	PublicKey string `json:"public_key"`
-	JwtToken  string `json:"jwt"`
-}
-
 func RegisterAgent(c *gin.Context) {
-	var raw_request UnverifiedRequest
+	var raw_request types.RegistrationRequest
 	check_error(c, c.BindJSON(&raw_request), 400)
 	// Check secret key
 	if raw_request.SecretKey != SECRET_KEY {
@@ -59,7 +47,7 @@ func RegisterAgent(c *gin.Context) {
 	if check_error(c, err, 500) {
 		return
 	}
-	c.JSON(200, RegisterAgentResponse{
+	c.JSON(200, types.RegistrationResponse{
 		Success:   true,
 		PublicKey: sec.EncodeBS(sec.Public_key),
 		JwtToken:  response_token,
@@ -68,7 +56,7 @@ func RegisterAgent(c *gin.Context) {
 
 func check_error(c *gin.Context, err error, code int) bool {
 	if err != nil {
-		c.JSON(code, RegisterAgentResponse{
+		c.JSON(code, types.RegistrationResponse{
 			Success: false,
 			Error:   err.Error(),
 		})
