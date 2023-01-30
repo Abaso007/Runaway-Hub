@@ -87,7 +87,7 @@ func GetAgent(publicIP string) (types.Agent, error) {
 	// Get agent from rows
 	var agent types.Agent
 	for rows.Next() {
-		err = rows.Scan(&agent.PublicIP, &agent.PublicKey, &agent.Identity, &agent.Name)
+		err = rows.Scan(&agent.PublicIP, &agent.PublicKey, &agent.Identity, &agent.Name, &agent.Country, &agent.ISP)
 		if err != nil {
 			return types.Agent{}, err
 		}
@@ -113,7 +113,7 @@ func GetAgents() ([]types.Agent, error) {
 	var agents []types.Agent
 	for rows.Next() {
 		var agent types.Agent
-		err = rows.Scan(&agent.PublicIP, &agent.PublicKey, &agent.Identity, &agent.Name)
+		err = rows.Scan(&agent.PublicIP, &agent.PublicKey, &agent.Identity, &agent.Name, &agent.Country, &agent.ISP)
 		if err != nil {
 			return nil, err
 		}
