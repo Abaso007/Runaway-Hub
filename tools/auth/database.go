@@ -45,12 +45,14 @@ func RegisterAgent(agent types.Agent) error {
 	defer rows.Close()
 	for rows.Next() {
 		// Update agent with new information
-		stmt, err := sqliteDB.Prepare("UPDATE agents SET public_key = ?, identity = ?, name = ? WHERE public_ip = ?, country = ?, isp = ?")
+		stmt, err := sqliteDB.Prepare("UPDATE agents SET public_key = ?, identity = ?, name = ?, country = ?, isp = ? WHERE public_ip = ?")
 		if err != nil {
+			println("Error at preparation")
 			return err
 		}
 		_, err = stmt.Exec(agent.PublicKey, agent.Identity, agent.Name, agent.PublicIP, agent.Country, agent.ISP)
 		if err != nil {
+			println("Error at execution")
 			return err
 		} else {
 			return nil
