@@ -6,6 +6,8 @@ github.com/RunawayVPN/types v0.0.0-20230125075910-85ef06638509 h1:QSGQVc0qNp8Nwt
 github.com/RunawayVPN/types v0.0.0-20230125075910-85ef06638509/go.mod h1:x4S5krckefOJzF5H6DrtMi9yBjcp6+EDcZb+J9jXoCE=
 github.com/RunawayVPN/types v0.0.0-20230125080857-a8439f00b3e8 h1:ZIasoSxaIZ0mwjTaGZWoINuBysQnczirBAbuDKnbeG8=
 github.com/RunawayVPN/types v0.0.0-20230125080857-a8439f00b3e8/go.mod h1:x4S5krckefOJzF5H6DrtMi9yBjcp6+EDcZb+J9jXoCE=
+github.com/RunawayVPN/types v0.0.0-20230207061748-abcd7daded9d h1:XhSKSieAXBsiKyxbTYtIXGhLpagTdVkkl1bZeLKy/CM=
+github.com/RunawayVPN/types v0.0.0-20230207061748-abcd7daded9d/go.mod h1:x4S5krckefOJzF5H6DrtMi9yBjcp6+EDcZb+J9jXoCE=
 github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766 h1:SivOaKka46JOVHKBVh1iUxCvuHQmVVdYM+7lwsZ7lNM=
 github.com/acheong08/crystals-go v0.0.0-20221113173009-20f37d186766/go.mod h1:bGOBCYp4Rbac3haOe4f2IM03aw6Z303KGMfcBoQdZrc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/RunawayVPN/security v0.0.0-20230124162644-74763fa090d4
-	github.com/RunawayVPN/types v0.0.0-20230125080857-a8439f00b3e8
+	github.com/RunawayVPN/types v0.0.0-20230207061748-abcd7daded9d
 	github.com/gin-gonic/gin v1.8.2
 	github.com/mattn/go-sqlite3 v1.14.16
 )

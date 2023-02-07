@@ -16,41 +16,40 @@ import (
 const SECRET_KEY = "secret"
 
 func RegisterAgent(c *gin.Context) {
-	var raw_request types.RegistrationRequest
-	check_error(c, c.BindJSON(&raw_request), 400)
+	var request types.RegistrationRequest
+	check_error(c, c.BindJSON(&request), 400)
 	// Check secret key
-	if raw_request.SecretKey != SECRET_KEY {
-		if check_error(c, errors.New("invalid secret key"), 500) {
+	if request.SecretKey != SECRET_KEY {
+		if check_error(c, errors.New("invalid secret key"), 401) {
 			return
 		}
 	}
-	// Verify JWT
-	request_payload, err := sec.VerifyToken(raw_request.JwtToken, raw_request.PublicKey)
-	if check_error(c, err, 401) {
-		return
-	}
 	// Unmarshal payload
-	var agent types.Agent
-	if check_error(c, json.Unmarshal([]byte(request_payload), &agent), 500) {
-		return
-	}
+	var agent types.Agent = request.Agent
+	// Register to database
 	if check_error(c, auth.RegisterAgent(agent), 500) {
 		return
 	}
-	// Construct JWT payload with agent
-	response_jwt_payload, err := json.Marshal(agent)
+	// Create Auth token
+	auth_token := types.AuthToken{
+		Endpoint: agent.PublicIP,
+		Roles:    []string{"agent"},
+	}
+	// Convert to JSON string
+	auth_token_json, err := json.Marshal(auth_token)
 	if check_error(c, err, 500) {
 		return
 	}
-	// Create JWT response_token
-	response_token, err := sec.CreateToken(string(response_jwt_payload))
+	// Create JWT
+	auth_token_jwt, err := sec.CreateToken(string(auth_token_json))
 	if check_error(c, err, 500) {
 		return
 	}
+
 	c.JSON(200, types.RegistrationResponse{
 		Success:   true,
 		PublicKey: sec.EncodeBS(sec.Public_key),
-		JwtToken:  response_token,
+		AuthToken: auth_token_jwt,
 	})
 }
 
